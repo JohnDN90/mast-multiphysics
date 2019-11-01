@@ -207,7 +207,7 @@ protected:
 
 public:
     
-    //  \section init_mesh Mesh Generation
+    //  \section  ex_5_init_mesh Mesh Generation
     //  This creates the mesh for the specified problem type.
     //
     void _init_mesh() {
@@ -232,7 +232,7 @@ public:
     }
 
     //
-    //  \subsection inplane_mesh Inplane problem
+    //  \subsection ex_5_inplane_mesh Inplane problem
     //
     void _init_mesh_inplane()  {
         
@@ -291,7 +291,7 @@ public:
     }
     
     //
-    //  \subsection bracket_mesh Bracket
+    //  \subsection ex_5_bracket_mesh Bracket
     //
     void _init_mesh_bracket() {
 
@@ -409,7 +409,7 @@ public:
 
     
     //
-    //  \subsection eyebar_mesh Eyebar
+    //  \subsection ex_5_eyebar_mesh Eyebar
     //
     void _init_mesh_eye_bar() {
         
@@ -501,7 +501,7 @@ public:
     }
 
     //
-    //  \section system_discipline  System and Discipline
+    //  \section  ex_5_system_discipline  System and Discipline
     //
     void _init_system_and_discipline() {
         
@@ -598,7 +598,7 @@ public:
 
     
     //
-    //  \section dirichlet Dirichlet Constraints
+    //  \section  ex_5_dirichlet Dirichlet Constraints
     //
     void _init_dirichlet_conditions() {
         
@@ -618,7 +618,7 @@ public:
     }
     
     //
-    //  \subsection inplane_dirichlet Inplane
+    //  \subsection ex_5_inplane_dirichlet Inplane
     //
     void _init_dirichlet_conditions_inplane() {
         
@@ -653,7 +653,7 @@ public:
     }
     
     //
-    //  \subsection truss_dirichlet Truss
+    //  \subsection ex_5_truss_dirichlet Truss
     //
     void _init_dirichlet_conditions_truss() {
         
@@ -723,7 +723,7 @@ public:
 
     
     //
-    //  \subsection bracket_dirichlet Bracket
+    //  \subsection ex_5_bracket_dirichlet Bracket
     //
     void _init_dirichlet_conditions_bracket() {
         
@@ -750,7 +750,7 @@ public:
     
     
     //
-    //  \subsection eyebar_dirichlet Eyebar
+    //  \subsection ex_5_eyebar_dirichlet Eyebar
     //
     void _init_dirichlet_conditions_eye_bar() {
         
@@ -778,7 +778,7 @@ public:
     
 
     //
-    //  \section loading Loading
+    //  \section  ex_5_loading Loading
     //
     //
     void _init_loads() {
@@ -797,7 +797,7 @@ public:
     }
     
     
-    //  \subsection inplane_loading Inplane
+    //  \subsection ex_5_inplane_loading Inplane
     //
     class FluxLoad:
     public MAST::FieldFunction<Real> {
@@ -844,7 +844,7 @@ public:
     
     
     //
-    //  \subsection bracket_loading Bracket
+    //  \subsection ex_5_bracket_loading Bracket
     //
     class BracketLoad:
     public MAST::FieldFunction<Real> {
@@ -895,7 +895,7 @@ public:
 
     
     //
-    //  \subsection eyebar_loading Eyebar
+    //  \subsection ex_5_eyebar_loading Eyebar
     //
     class EyebarLoad:
     public MAST::FieldFunction<Real> {
@@ -931,11 +931,11 @@ public:
 
     
     //
-    //   \section properties Properties
+    //   \section  ex_5_properties Properties
     //
     //
     //
-    //   \subsection material_properties Material Properties
+    //   \subsection ex_5_material_properties Material Properties
     //
 
     void _init_material() {
@@ -989,7 +989,7 @@ public:
 
     
     //
-    //   \subsection section_properties Section Properties
+    //   \subsection ex_5_section_properties Section Properties
     //
 
     void _init_section_property(){
@@ -1032,7 +1032,7 @@ public:
     
 
     //
-    //   \section initial_solution Initial Level Set
+    //   \section  ex_5_initial_solution Initial Level Set
     //
     //
     class Phi:
@@ -1057,51 +1057,19 @@ public:
         _nx_holes (nx_holes),
         _ny_holes (ny_holes),
         _pi  (acos(-1.)) {
+
+            Real
+            dx = _l1/(1.*_nx_holes);
             
-            //
-            // initialize the locations at which the holes will be nucleated
-            // first, along the x-axis
-            //
-            if (_nx_holes == 1)
-                _x_axis_hole_locations.insert(_x0 + l1 * 0.5);
-            else if (_nx_holes >= 2) {
-                
-                // add holes at the beginning and end
-                _x_axis_hole_locations.insert(_x0);
-                _x_axis_hole_locations.insert(_x0+_l1);
-              
-                //
-                // now, add holes at uniformly spaced locations
-                // in the domain
-                //
-                Real
-                dx = _l1/(1.*(_nx_holes-1));
-                for (unsigned int i=2; i<_nx_holes; i++)
-                    _x_axis_hole_locations.insert(_x0+dx*(i-1));
-            }
+            for (unsigned int i=0; i<_nx_holes; i++)
+                _x_axis_hole_locations.insert(_x0+(i+.5)*dx);
             
             //
             // now, along the y-axis
             //
-            if (_ny_holes == 1)
-                _y_axis_hole_locations.insert(_y0+l2 * 0.5);
-            else if (_ny_holes >= 2) {
-              
-                //
-                // add holes at the beginning and end
-                //
-                _y_axis_hole_locations.insert(_y0);
-                _y_axis_hole_locations.insert(_y0+_l2);
-                
-                //
-                // now, add holes at uniformly spaced locations
-                // in the domain
-                //
-                Real
-                dx = _l2/(1.*(_ny_holes-1));
-                for (unsigned int i=2; i<_ny_holes; i++)
-                    _y_axis_hole_locations.insert(_y0+dx*(i-1));
-            }
+            dx = _l2/(1.*_ny_holes);
+            for (unsigned int i=0; i<_ny_holes; i++)
+                _y_axis_hole_locations.insert(_y0+(i+0.5)*dx);
         }
         virtual ~Phi() {}
         virtual void operator()(const libMesh::Point& p,
@@ -1223,7 +1191,7 @@ public:
     }
     
     //
-    //  \subsection inplane_initial_level_set Inplane
+    //  \subsection ex_5_inplane_initial_level_set Inplane
     //
     void _init_phi_dvs_inplane() {
         
@@ -1299,7 +1267,7 @@ public:
     }
     
     //
-    //  \subsection truss_initial_level_set Truss
+    //  \subsection ex_5_truss_initial_level_set Truss
     //
     void _init_phi_dvs_truss() {
         
@@ -1375,7 +1343,7 @@ public:
     }
     
     //
-    //  \subsection bracket_initial_level_set Bracket
+    //  \subsection ex_5_bracket_initial_level_set Bracket
     //
     void _init_phi_dvs_bracket() {
         
@@ -1477,7 +1445,7 @@ public:
     
     
     //
-    //  \subsection eyebar_initial_level_set Eyebar
+    //  \subsection ex_5_eyebar_initial_level_set Eyebar
     //
     void _init_phi_dvs_eye_bar() {
         
@@ -1574,7 +1542,7 @@ public:
 
     
     //
-    //   \subsection design_variable_init   Design Variables
+    //   \subsection ex_5_design_variable_init   Design Variables
     //
     //   initializes the design variable vector, called by the
     //   optimization interface.
@@ -1610,10 +1578,10 @@ public:
     }
 
     //
-    //  \section analysis Function Evaluation and Sensitivity
+    //  \section  ex_5_analysis Function Evaluation and Sensitivity
     //
     //
-    //   \subsection element_error_metric Element Error Metric
+    //   \subsection ex_5_element_error_metric Element Error Metric
     //
     void
     _compute_element_errors(libMesh::ErrorVector& error) {
@@ -1677,7 +1645,7 @@ public:
     
 
     //
-    //  \subsection function_evaluation Function Evaluation
+    //  \subsection ex_5_function_evaluation Function Evaluation
     //
     void evaluate(const std::vector<Real>& dvars,
                   Real& obj,
@@ -1934,14 +1902,6 @@ public:
             
             _evaluate_volume_sensitivity(&volume, &perimeter, level_set_assembly, obj_grad);
             
-            /*_evaluate_constraint_sensitivity(stress,
-                                             nonlinear_elem_ops,
-                                             nonlinear_assembly,
-                                             modal_elem_ops,
-                                             eigen_assembly,
-                                             enable_grad,
-                                             stress_grad);*/
-            
             /*_evaluate_compliance_sensitivity(compliance,
                                              nonlinear_elem_ops,
                                              nonlinear_assembly,
@@ -1979,7 +1939,7 @@ public:
     }
 
     //
-    //  \subsection volume_sensitivity Sensitivity of Material Volume
+    //  \subsection ex_5_volume_sensitivity Sensitivity of Material Volume
     //
     void _evaluate_volume_sensitivity(MAST::LevelSetVolume*    volume,
                                       MAST::LevelSetPerimeter* perimeter,
@@ -2049,7 +2009,7 @@ public:
     
     
     //
-    //  \subsection stress_sensitivity Sensitivity of Stress and Eigenvalues
+    //  \subsection ex_5_stress_sensitivity Sensitivity of Stress and Eigenvalues
     //
     void
     _evaluate_stress_sensitivity
@@ -2176,7 +2136,7 @@ public:
     }
 
     //
-    //  \subsection design_output  Output of Design Iterate
+    //  \subsection ex_5_design_output  Output of Design Iterate
     //
     void output(unsigned int iter,
                 const std::vector<Real>& x,
@@ -2288,9 +2248,9 @@ public:
     
     
     //
-    // \section initialization  Initialization
+    // \section  ex_5_initialization  Initialization
     //
-    //   \subsection constructor  Constructor
+    //   \subsection ex_5_constructor  Constructor
     //
     
     TopologyOptimizationLevelSet2D(const libMesh::Parallel::Communicator& comm_in,
@@ -2397,7 +2357,7 @@ public:
     }
     
     //
-    //   \subsection destructor  Destructor
+    //   \subsection ex_5_destructor  Destructor
     //
     ~TopologyOptimizationLevelSet2D() {
         
@@ -2458,7 +2418,7 @@ public:
 
 
 //
-//   \subsection wrappers_snopt  Wrappers for SNOPT
+//   \subsection ex_5_wrappers_snopt  Wrappers for SNOPT
 //
 
 TopologyOptimizationLevelSet2D* _my_func_eval = nullptr;
@@ -2615,7 +2575,7 @@ _optim_con(int*    mode,
 #endif
 
 //
-//   \subsection main Main function
+//   \subsection ex_5_main Main function
 //
 
 int main(int argc, char* argv[]) {
@@ -2674,7 +2634,7 @@ int main(int argc, char* argv[]) {
         //top_opt.initialize_dv_from_output_file("output1.txt", 24, xx1);
         //top_opt.verify_gradients(xx1);
         optimizer->optimize();
-        //top_opt.parametric_line_study("output2.txt", 0, 8, 100);
+        //top_opt.parametric_line_study("output1.txt", 0, 450, 500);
     }
     
     // END_TRANSLATE
